@@ -1,92 +1,100 @@
-import axios from "axios";
-
-let apiKey =
+const apiKey =
   "live_Nk1ODSgWNZsWSkQXAd0SQtlQrPGjRxXBwpJLv0ELor8Ta8m7Z5IaUC1U9KKwRTra";
-let baseURL = "https://api.thedogapi.com/v1";
+const baseURL = "https://api.thedogapi.com/v1";
 
-getDoggy("terrier")
-  .then((result) => {
-    if (result) {
-      console.log("Successfully got data!");
-      console.log(JSON.stringify(result, null, 2));
-    }
-  })
-  .catch((err) => {
-    console.error("Error in main:", err.message);
-  });
+// DOM Elements
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
+const breedsContainer = document.getElementById("breedsContainer");
 
-async function getDoggy(name) {
+// Event Listeners
+searchBtn.addEventListener("click", handleSearch);
+searchInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") handleSearch();
+});
+
+// Search on page load
+window.addEventListener("DOMContentLoaded", () => {
+  searchInput.value = "husky";
+  handleSearch();
+});
+
+function handleSearch() {
+  const searchTerm = searchInput.value.trim();
+  if (searchTerm) {
+    searchBreeds(searchTerm);
+  }
+}
+
+async function searchBreeds(name) {
   try {
-    if (!name) {
-      throw new Error("Must include a name to search for!");
-    }
+    // Clear and show loading
+    breedsContainer.innerHTML = "<p>Loading...</p>";
 
-    let apiURL = `${baseURL}/breeds/search?q=${name}`;
-    let response = await axios.get(apiURL, {
-      headers: {
-        "x-api-key": apiKey,
-      },
+    // API call
+    const response = await axios.get(`${baseURL}/breeds/search?q=${name}`, {
+      headers: { "x-api-key": apiKey },
     });
 
+    // Clear loading
+    breedsContainer.innerHTML = "";
+
     const breeds = response.data;
-
     if (breeds.length === 0) {
-      console.log("No breeds found!");
-      return null;
+      breedsContainer.innerHTML =
+        '<p class="error">No breeds found. Try a different search term.</p>';
+      return;
     }
 
-    console.log(`Found ${breeds.length} breed(s):\n`);
-
-    // Get ALL breeds
-    const allBreedsData = [];
-
+    // Display all breeds
     for (const breed of breeds) {
-      console.log(`Processing: ${breed.name}`);
+      await displayBreed(breed);
+    }
+  } catch (error) {
+    breedsContainer.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+  }
+}
 
-      const basicInfo = {
-        name: breed.name,
-        lifeSpan: breed.life_span,
-        temperament: breed.temperament,
-        origin: breed.origin,
-        description: breed.description,
-        breed_group: breed.breed_group,
-        weight: breed.weight.metric,
-        height: breed.height.metric,
-      };
-
-      let images = [];
-      try {
-        const imagesResponse = await axios.get(
-          `${baseURL}/images/search?breed_id=${breed.id}&limit=5`,
-          {
-            headers: {
-              "x-api-key": apiKey,
-            },
-          }
-        );
-
-        images = imagesResponse.data.map((img) => ({
-          id: img.id,
-          url: img.url,
-          width: img.width,
-          height: img.height,
-        }));
-
-        console.log(`  Found ${images.length} image(s) for ${breed.name}`);
-      } catch (imageErr) {
-        console.log(`  No images found for ${breed.name}`);
+async function displayBreed(breed) {
+  try {
+    // Get image
+    let imageUrl = null;
+    try {
+      const imageResponse = await axios.get(
+        `${baseURL}/images/search?breed_id=${breed.id}&limit=1`,
+        { headers: { "x-api-key": apiKey } }
+      );
+      if (imageResponse.data.length > 0) {
+        imageUrl = imageResponse.data[0].url;
       }
-
-      allBreedsData.push({
-        ...basicInfo,
-        images: images,
-        full_breed_data: breed,
-      });
+    } catch (imageError) {
+      console.error("Image error:", imageError);
     }
 
-    return allBreedsData;
-  } catch (err) {
-    console.error(`Error getting breed data: ${err.message}`);
-    return null;
+    // Create card
+    const breedCard = document.createElement("div");
+    breedCard.className = "breed-card";
+    breedCard.innerHTML = `
+            ${
+              imageUrl
+                ? `<img src="${imageUrl}" alt="${breed.name}" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 10px;">`
+                : ""
+            }
+            <h3>${breed.name}</h3>
+            <p><strong>Lifespan:</strong> ${breed.life_span || "N/A"}</p>
+            <p><strong>Temperament:</strong> ${breed.temperament || "N/A"}</p>
+            <p><strong>Origin:</strong> ${breed.origin || "N/A"}</p>
+            <p><strong>Group:</strong> ${breed.breed_group || "N/A"}</p>
+            <p><strong>Description:</strong> 
+                ${
+                  breed.description
+                    ? breed.description.substring(0, 100) + "..."
+                    : "No description"
+                }
+            </p>
+        `;
+    breedsContainer.appendChild(breedCard);
+  } catch (error) {
+    console.error(`Error with ${breed.name}:`, error);
   }
 }

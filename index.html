@@ -5,10 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./styles/styles.css" />
     <title>Dog Breed Search</title>
-    <script defer src="./scripts/script.mjs" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script defer src="./scripts/script.mjs"></script>
   </head>
   <body>
-    <h1>Dog Breed Search</h1>
-    <div id="results"></div>
+    <h1>Dog Breed Finder</h1>
+
+    <div id="searchContainer">
+      <input type="text" id="searchInput" placeholder="Enter breed name" />
+      <button id="searchBtn">Search</button>
+    </div>
+
+    <div id="breedsContainer">
+      <!-- Breed cards inserted here -->
+    </div>
   </body>
 </html>
