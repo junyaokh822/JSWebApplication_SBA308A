@@ -93,6 +93,7 @@ h1 {
 .image-carousel {
   margin-bottom: 20px;
   position: relative;
+  text-align: center;
 }
 
 .carousel-container {
@@ -147,10 +148,10 @@ h1 {
 .carousel-counter {
   text-align: center;
   font-size: 16px;
-  color: #555;
+  color: #3d3d3d;
   margin-bottom: 15px;
   font-weight: bold;
-  background: #f0f0f0;
+  background: #dfdfdf;
   padding: 5px 10px;
   border-radius: 20px;
   display: inline-block;

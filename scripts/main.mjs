@@ -38,9 +38,7 @@ function handleSearch() {
 async function performSearch(name) {
   try {
     showLoading(breedsContainer);
-
     const breeds = await searchBreeds(name);
-
     clearContainer(breedsContainer);
 
     if (breeds.length === 0) {
@@ -52,9 +50,7 @@ async function performSearch(name) {
     }
 
     // Display each breed
-    for (const breed of breeds) {
-      await displayBreed(breed);
-    }
+    await Promise.all(breeds.map((breed) => displayBreed(breed)));
 
     // Scroll to results
     breedsContainer.scrollIntoView({ behavior: "smooth" });
