@@ -19,6 +19,7 @@ h1 {
   width: 300px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 16px;
 }
 
 #searchBtn {
@@ -28,6 +29,13 @@ h1 {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 16px;
+  margin-left: 10px;
+  transition: background-color 0.3s;
+}
+
+#searchBtn:hover {
+  background-color: #45a049;
 }
 
 #breedsContainer {
@@ -41,29 +49,224 @@ h1 {
   background: white;
   border-radius: 8px;
   padding: 20px;
-  margin: 10px auto;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.breed-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .breed-card h3 {
   margin-top: 0;
   color: #2c3e50;
-}
-
-.breed-card img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
+  font-size: 24px;
+  border-bottom: 2px solid #4caf50;
+  padding-bottom: 10px;
   margin-bottom: 15px;
 }
 
+.breed-card p {
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+.breed-card strong {
+  color: #333;
+}
+
 .error {
-  color: red;
-  background: #ffe6e6;
-  padding: 10px;
+  color: #d32f2f;
+  background: #ffebee;
+  padding: 15px;
   border-radius: 4px;
   text-align: center;
   max-width: 800px;
   margin: 20px auto;
+  border-left: 4px solid #d32f2f;
+}
+
+/* Carousel Styles */
+.image-carousel {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.carousel-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.breed-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  max-height: 350px;
+  object-fit: cover;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.3s ease;
+}
+
+.carousel-btn {
+  background-color: rgba(76, 175, 80, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  font-weight: bold;
+  padding: 0;
+  line-height: 1;
+}
+
+.carousel-btn:hover:not(:disabled) {
+  background-color: rgba(76, 175, 80, 1);
+  transform: scale(1.1);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.carousel-btn:disabled {
+  background-color: rgba(200, 200, 200, 0.5);
+  cursor: not-allowed;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.carousel-counter {
+  text-align: center;
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 15px;
+  font-weight: bold;
+  background: #f0f0f0;
+  padding: 5px 10px;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+.carousel-thumbnails {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 15px;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.carousel-thumbnails img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.carousel-thumbnails img:hover {
+  transform: scale(1.1);
+  border-color: #4caf50 !important;
+}
+
+.carousel-thumbnails img.active {
+  border: 3px solid #4caf50;
+  transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  #searchInput {
+    width: 250px;
+  }
+
+  .carousel-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .breed-image {
+    max-height: 300px;
+  }
+
+  .carousel-thumbnails img {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 15px;
+  }
+
+  #searchInput {
+    width: 200px;
+    font-size: 14px;
+  }
+
+  #searchBtn {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .carousel-container {
+    gap: 8px;
+  }
+
+  .carousel-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+  }
+
+  .breed-image {
+    max-height: 250px;
+  }
+
+  .carousel-thumbnails img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .breed-card {
+    padding: 15px;
+    margin: 15px auto;
+  }
+
+  .breed-card h3 {
+    font-size: 20px;
+  }
+}
+
+/* Loading Animation */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+#breedsContainer > p:first-child {
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+  animation: pulse 1.5s infinite;
 }
